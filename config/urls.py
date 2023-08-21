@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 # swagger 관련
 from django.urls import re_path
@@ -38,8 +38,11 @@ permission_classes=(permissions.AllowAny,),
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    
+    path('api/admin/', admin.site.urls),
+    path('api/accounts',include('accounts.urls')),
+    path('api/posts',include('posts.urls')),
+    path('api/ttsposts',include('ttsposts.urls')),
+    path('api/users',include('users.urls')),
     
     # swagger 관련
     path('api/swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'posts',
     'users',
+    'ttsposts',
     'drf_yasg',
 ]
 
