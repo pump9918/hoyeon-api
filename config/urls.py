@@ -39,10 +39,10 @@ permission_classes=(permissions.AllowAny,),
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
-    path('api/accounts',include('accounts.urls')),
-    path('api/posts',include('posts.urls')),
-    path('api/ttsposts',include('ttsposts.urls')),
-    path('api/users',include('users.urls')),
+    path('api/accounts/',include('accounts.urls')),
+    path('api/posts/',include('posts.urls')),
+    path('api/ttsposts/',include('ttsposts.urls')),
+    path('api/users/',include('users.urls')),
     
     # swagger 관련
     path('api/swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
