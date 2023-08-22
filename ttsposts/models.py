@@ -25,7 +25,7 @@ class ttsPost(models.Model):
     id = models.AutoField(primary_key=True, null=False)
     tts_title_message = models.CharField(max_length=100, blank=False, null=False)
     tts_message = models.TextField(blank=False, null=False)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile_author')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile_author', blank=False, null=False)
     published_date = models.DateTimeField(default=timezone.now)
     tts_title_audio = models.ForeignKey(TTSAudioTitle, on_delete=models.SET_NULL, null=True, blank=True)
     tts_audio = models.ForeignKey(TTSAudio, on_delete=models.SET_NULL, null=True, blank=True)
