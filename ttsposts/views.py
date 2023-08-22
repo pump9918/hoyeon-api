@@ -8,10 +8,20 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.shortcuts import get_list_or_404, get_object_or_404
 
+from django.http import HttpResponse
+from rest_framework import viewsets
+from .models import ttsPost, TTSAudioTitle, TTSAudio
+from .serializers import ttsPostSerializer
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from django.shortcuts import get_list_or_404, get_object_or_404
+
 class ttsPostViewSet(viewsets.ModelViewSet):
     queryset = ttsPost.objects.all()
     permission_classes = []
-    serializer_class = ttsPostSerializer
+    # serializer_class = ttsPostSerializer
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
@@ -23,6 +33,7 @@ class ttsPostViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['post'])
     def create_post_with_audio(self, request):
+        print(request.user) #로그인한 유저 확인용
         tts_title_message = request.data.get('tts_title_message')
         tts_message = request.data.get('tts_message')
 
@@ -36,20 +47,23 @@ class ttsPostViewSet(viewsets.ModelViewSet):
         post_serializer = ttsPostSerializer(data=data, context={'request': request})
         
         if post_serializer.is_valid():
-            post = post_serializer.save()
+            tts_title_message = request.data.get('tts_title_message')
+            tts_message = request.data.get('tts_message')
 
             existing_tts_title = None
             existing_tts_audio = None
 
             if tts_title_message:
-                existing_tts_titles = get_list_or_404(TTSAudioTitle, title_message=tts_title_message, user=request.user)
-                if existing_tts_titles:
-                    existing_tts_title = existing_tts_titles[0]
+                existing_tts_titles = TTSAudioTitle.objects.filter(title_message=tts_title_message, user=request.user)
+                if existing_tts_titles.exists():
+                    existing_tts_title = existing_tts_titles.first()
 
             if tts_message:
-                existing_tts_audios = get_list_or_404(TTSAudio, message=tts_message, user=request.user)
-                if existing_tts_audios:
-                    existing_tts_audio = existing_tts_audios[0]
+                existing_tts_audios = TTSAudio.objects.filter(message=tts_message, user=request.user)
+                if existing_tts_audios.exists():
+                    existing_tts_audio = existing_tts_audios.first()
+
+            post = post_serializer.save(author=request.user)
 
             if existing_tts_title:
                 post.tts_title_audio = existing_tts_title
@@ -60,9 +74,10 @@ class ttsPostViewSet(viewsets.ModelViewSet):
 
             return Response(post_serializer.data, status=status.HTTP_201_CREATED)
         return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
 
 class TTSAudioTitleAPIView(APIView):
     permission_classes = []

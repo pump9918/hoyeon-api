@@ -23,8 +23,8 @@ class ttsPostSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ttsPost
-        fields = ('id', 'published_date', 'author_name', 'tts_title_message', 'tts_message', 'tts_title_audio', 'tts_audio', 'tts_title_audio_message', 'tts_audio_message')
-        read_only_fields = ('id', 'published_date', 'author', 'tts_title_audio_message', 'tts_audio_message')
+        fields = ('id', 'published_date', 'author', 'author_name', 'tts_title_message', 'tts_message', 'tts_title_audio', 'tts_audio', 'tts_title_audio_message', 'tts_audio_message')
+        read_only_fields = ('id', 'published_date', 'author', 'author_name', 'tts_title_audio_message', 'tts_audio_message')
 
     def create(self, validated_data):
         tts_title_message = validated_data.pop('tts_title_message', None)

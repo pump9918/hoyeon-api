@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -130,6 +130,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #media폴더를 만들어 파일 모아줌
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -137,6 +140,21 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SITE_ID = 1 #admin 출입 위해
+
+
+# rest framework 에 대한 설정
+REST_FRAMEWORK = {
+    # 기본 인증에 대한 설정
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication', # dj_rest_auth 의 인증 절차 중 JWTCookieAuthentication을 사용
+        'rest_framework.authentication.TokenAuthentication', #이게 있어야 postman에 Token을 쓸 수 있음
+    ),
+    # 허가에 대한 설정
+    'DEFAULT_PERMISSION_CLASSES': (
+    	# 인증이 완료된 사용자에 한해서 접근 허가
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None # username 필드 사용 x
 ACCOUNT_EMAIL_REQUIRED = True            # email 필드 사용 o
