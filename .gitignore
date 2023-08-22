@@ -3,3 +3,7 @@ db.sqlite3
 secrets.json
 
 *.pyc # git에 올라가면 안되는 파일, 관리가 힘들어짐
+
+__pycache__/
+*.py[cod]
+*$py.class
